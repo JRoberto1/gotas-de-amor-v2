@@ -37,8 +37,7 @@ cp .env.example .env.local
 |---|---|---|
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | ID do projeto Sanity | [sanity.io/manage](https://sanity.io/manage) |
 | `NEXT_PUBLIC_SANITY_DATASET` | Dataset (ex: `production`) | Sanity → Settings → Datasets |
-| `SANITY_API_READ_TOKEN` | Token de leitura | Sanity → API → Tokens |
-| `SANITY_REVALIDATE_SECRET` | Segredo para webhooks | Qualquer string aleatória segura |
+| `SANITY_API_READ_TOKEN` | Token de leitura para Live Content API | Sanity → API → Tokens |
 
 ### Rodando
 
@@ -106,7 +105,6 @@ src/
    - `NEXT_PUBLIC_SANITY_PROJECT_ID`
    - `NEXT_PUBLIC_SANITY_DATASET`
    - `SANITY_API_READ_TOKEN`
-   - `SANITY_REVALIDATE_SECRET`
 3. Deploy automático a cada push na branch `main`
 
 ## Sanity Studio
