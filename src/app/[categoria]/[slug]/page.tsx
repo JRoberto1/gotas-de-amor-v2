@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { Star } from 'lucide-react'
 import { client } from '@/sanity/client'
 import { sanityFetch } from '@/sanity/lib/live'
 import {
@@ -11,6 +12,7 @@ import {
 import { getCategoriaByValue } from '@/lib/categorias'
 import MensagemCard from '@/components/MensagemCard'
 import BotaoCompartilhar from '@/components/BotaoCompartilhar'
+import CategoryIcon from '@/components/CategoryIcon'
 
 type Props = {
   params: Promise<{ categoria: string; slug: string }>
@@ -70,6 +72,7 @@ export default async function MensagemPage({ params }: Props) {
   if (!mensagem) notFound()
 
   const cat = getCategoriaByValue(mensagem.categoria)
+  const bgStrip = cat?.cor.split(' ')[0] ?? 'bg-rose-50'
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
@@ -78,33 +81,41 @@ export default async function MensagemPage({ params }: Props) {
         <Link href="/" className="hover:text-rose-500 transition-colors">
           Início
         </Link>
-        <span>/</span>
+        <span className="text-gray-200">/</span>
         <Link
           href={`/${mensagem.categoria}`}
           className="hover:text-rose-500 transition-colors"
         >
           {cat?.title ?? mensagem.categoria}
         </Link>
-        <span>/</span>
+        <span className="text-gray-200">/</span>
         <span className="text-gray-600 truncate max-w-[200px]">{mensagem.titulo}</span>
       </nav>
 
       {/* Card principal */}
       <article className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Cabeçalho com categoria */}
-        <div className={`${cat?.cor.split(' ')[0] ?? 'bg-rose-100'} px-8 py-6`}>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl">{cat?.emoji ?? '💬'}</span>
+        <div className={`${bgStrip} px-8 py-7`}>
+          <div className="flex items-center gap-2.5 mb-3">
+            {cat ? (
+              <CategoryIcon name={cat.iconName} size={18} className={cat.iconColor} />
+            ) : (
+              <CategoryIcon name="MessageCircle" size={18} className="text-rose-400" />
+            )}
             <span className="text-sm font-medium text-gray-500 uppercase tracking-wide">
               {cat?.title ?? mensagem.categoria}
             </span>
             {mensagem.destaque && (
-              <span className="ml-auto text-xs bg-white/80 text-rose-600 px-3 py-0.5 rounded-full font-medium">
+              <span className="ml-auto flex items-center gap-1 text-xs bg-white/80 text-rose-600 px-3 py-0.5 rounded-full font-medium">
+                <Star size={10} strokeWidth={2} className="fill-rose-400 text-rose-400" />
                 Destaque
               </span>
             )}
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 leading-snug mt-2">
+          <h1
+            className="text-2xl md:text-3xl font-bold text-gray-800 leading-snug"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
             {mensagem.titulo}
           </h1>
         </div>
@@ -121,7 +132,7 @@ export default async function MensagemPage({ params }: Props) {
               {mensagem.tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="text-xs bg-gray-100 text-gray-500 px-3 py-1 rounded-full"
+                  className="text-xs bg-gray-50 text-gray-500 border border-gray-100 px-3 py-1 rounded-full"
                 >
                   #{tag}
                 </span>
@@ -137,7 +148,10 @@ export default async function MensagemPage({ params }: Props) {
       {/* Mensagens relacionadas */}
       {relacionadas && relacionadas.length > 0 && (
         <section className="mt-14">
-          <h2 className="text-xl font-bold text-gray-700 mb-5">
+          <h2
+            className="text-xl font-bold text-gray-700 mb-6"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
             Mais mensagens de {cat?.title ?? mensagem.categoria}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -145,10 +159,10 @@ export default async function MensagemPage({ params }: Props) {
               <MensagemCard key={m._id} mensagem={m} />
             ))}
           </div>
-          <div className="mt-6 text-center">
+          <div className="mt-8 text-center">
             <Link
               href={`/${mensagem.categoria}`}
-              className="inline-block px-6 py-2.5 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-full text-sm font-medium transition-colors"
+              className="inline-block px-6 py-2.5 border border-rose-200 text-rose-600 hover:bg-rose-50 rounded-full text-sm font-medium transition-all duration-200"
             >
               Ver todas as mensagens de {cat?.title} →
             </Link>

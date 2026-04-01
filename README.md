@@ -1,69 +1,121 @@
-# Template de Agente — Roberto
+# Gotas de Amor
 
-Este é o template base para todos os projetos.
-Copie esta pasta para cada novo projeto e o Claude Code já sabe como operar.
+Portal de mensagens temáticas para compartilhar amor, fé, motivação e carinho.
 
----
+## Stack
 
-## Como usar
+- **Framework**: Next.js 15 (App Router)
+- **CMS**: Sanity.io (headless)
+- **Estilização**: Tailwind CSS v4
+- **Fontes**: Playfair Display + Inter (Google Fonts via `next/font`)
+- **Ícones**: Lucide React
+- **Hospedagem**: Vercel
+- **Linguagem**: TypeScript
 
-### Novo projeto
+## Rodando localmente
+
+### Pré-requisitos
+
+- Node.js 18+
+- Conta no Sanity.io com projeto configurado
+
+### Instalação
+
 ```bash
-# Copie este template para a pasta do novo projeto
-cp -r skills-template/ meu-novo-projeto/
-cd meu-novo-projeto/
-
-# Abra o Claude Code
-claude
+npm install
 ```
 
-O Claude Code vai ler o `AGENTS.md` automaticamente e já sabe:
-- Como se comportar
-- Qual skill carregar para cada tipo de tarefa
-- Como registrar aprendizados
+### Variáveis de ambiente
 
----
+Copie `.env.example` para `.env.local` e preencha os valores:
 
-## Estrutura
-
-```
-skills-template/
-├── AGENTS.md          ← guarda-chuva principal (lido automaticamente)
-├── LEARNINGS.md       ← aprendizados registrados ao longo do tempo
-├── README.md          ← este arquivo
-└── skills/
-    ├── web.md         ← sites, portais, landing pages
-    ├── app.md         ← apps mobile, PWA
-    ├── automation.md  ← scripts, integrações, automações
-    ├── content.md     ← textos, importação em lote, CMS
-    └── debug.md       ← diagnóstico e resolução de problemas
+```bash
+cp .env.example .env.local
 ```
 
----
+| Variável | Descrição | Onde obter |
+|---|---|---|
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | ID do projeto Sanity | [sanity.io/manage](https://sanity.io/manage) |
+| `NEXT_PUBLIC_SANITY_DATASET` | Dataset (ex: `production`) | Sanity → Settings → Datasets |
+| `SANITY_API_READ_TOKEN` | Token de leitura | Sanity → API → Tokens |
+| `SANITY_REVALIDATE_SECRET` | Segredo para webhooks | Qualquer string aleatória segura |
 
-## Skills disponíveis
+### Rodando
 
-| Skill           | Quando usar                                      |
-|-----------------|--------------------------------------------------|
-| web.md          | Site, portal, landing page, blog, sistema web    |
-| app.md          | App mobile, PWA, aplicativo                      |
-| automation.md   | Script, integração, bot, processamento de dados  |
-| content.md      | Textos, mensagens, importação em CMS             |
-| debug.md        | Algo quebrou, erro, comportamento inesperado     |
+```bash
+npm run dev
+```
 
----
+Acesse [http://localhost:3000](http://localhost:3000).
 
-## Atualizando as Skills
+O Sanity Studio fica em [http://localhost:3000/studio](http://localhost:3000/studio).
 
-As skills melhoram com o uso. Quando o agente descobrir algo importante:
-1. Registra em `LEARNINGS.md`
-2. Atualiza a skill correspondente com a nova regra
+## Estrutura do projeto
 
-Você também pode editar as skills diretamente para adicionar preferências pessoais.
+```
+src/
+├── app/
+│   ├── layout.tsx              # Layout raiz (Header, Footer, fontes)
+│   ├── page.tsx                # Home page
+│   ├── globals.css             # Estilos globais + tema Tailwind
+│   ├── not-found.tsx           # Página 404
+│   ├── robots.ts               # SEO: robots.txt
+│   ├── sitemap.ts              # SEO: sitemap.xml dinâmico
+│   ├── [categoria]/
+│   │   ├── page.tsx            # Listagem de mensagens por categoria
+│   │   └── [slug]/
+│   │       └── page.tsx        # Página individual de mensagem
+│   └── studio/[[...tool]]/     # Sanity Studio embutido
+│
+├── components/
+│   ├── Header.tsx              # Navbar sticky com logo e nav
+│   ├── Footer.tsx              # Rodapé com links de categorias
+│   ├── MensagemCard.tsx        # Card reutilizável de mensagem
+│   ├── BotaoCompartilhar.tsx   # Botões de compartilhar/copiar
+│   └── CategoryIcon.tsx        # Mapeamento de ícones Lucide por categoria
+│
+├── lib/
+│   ├── categorias.ts           # Config central das 11 categorias
+│   └── types.ts                # Tipos TypeScript do projeto
+│
+└── sanity/
+    ├── schemaTypes/            # Schemas do CMS
+    └── lib/                    # Client, queries, live
+```
 
----
+## Categorias
 
-## Dica
+| Slug | Título | Ícone |
+|---|---|---|
+| `bom-dia` | Bom Dia | Sun |
+| `boa-noite` | Boa Noite | Moon |
+| `amor` | Amor | Heart |
+| `fe-espiritualidade` | Fé e Espiritualidade | Sparkles |
+| `familia` | Família | Home |
+| `motivacao` | Motivação | Zap |
+| `amizade` | Amizade | Users |
+| `aniversario` | Aniversário | Cake |
+| `datas-comemorativas` | Datas Comemorativas | Gift |
+| `meses-tematicos` | Meses Temáticos | Calendar |
+| `reflexao` | Reflexão | BookOpen |
 
-Quanto mais você usar, melhor fica.
-O agente aprende com cada projeto e registra o que funciona.
+## Deploy (Vercel)
+
+1. Conectar o repositório em [vercel.com/new](https://vercel.com/new)
+2. Adicionar as variáveis de ambiente nas configurações do projeto:
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
+   - `NEXT_PUBLIC_SANITY_DATASET`
+   - `SANITY_API_READ_TOKEN`
+   - `SANITY_REVALIDATE_SECRET`
+3. Deploy automático a cada push na branch `main`
+
+## Sanity Studio
+
+O Studio está disponível em `/studio`. Em produção, configure os CORS origins no painel do Sanity para incluir o domínio da Vercel.
+
+## SEO
+
+- `robots.txt` em `/robots.txt`
+- `sitemap.xml` dinâmico em `/sitemap.xml` (todas as categorias + mensagens)
+- Metadata individual por página (title, description, og:image)
+- URL canônica em páginas de mensagem

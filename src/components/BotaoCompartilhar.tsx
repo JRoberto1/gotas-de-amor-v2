@@ -1,5 +1,7 @@
 'use client'
 
+import { Share2, Copy } from 'lucide-react'
+
 type Props = {
   titulo: string
   texto: string
@@ -34,15 +36,17 @@ export default function BotaoCompartilhar({ titulo, texto }: Props) {
     <div className="flex flex-wrap gap-3 mt-6">
       <button
         onClick={compartilhar}
-        className="flex items-center gap-2 px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full text-sm font-medium transition-colors shadow-sm"
+        className="flex items-center gap-2 px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
       >
-        <span>📤</span> Compartilhar
+        <Share2 size={15} strokeWidth={2} />
+        Compartilhar
       </button>
       <button
         onClick={copiarTexto}
-        className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 rounded-full text-sm font-medium transition-colors shadow-sm"
+        className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-50 text-gray-600 border border-gray-200 rounded-full text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md"
       >
-        <span>📋</span> Copiar texto
+        <Copy size={15} strokeWidth={2} />
+        Copiar texto
       </button>
     </div>
   )
